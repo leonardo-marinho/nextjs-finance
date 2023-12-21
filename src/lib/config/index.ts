@@ -1,3 +1,9 @@
-interface Config {}
+import JwtConfig from './Jwt.config';
+import NodeConfig from './Node.config';
 
-export const config: Config = {};
+class Config {
+  jwt = new JwtConfig();
+  node = new NodeConfig();
+}
+
+export default new Config();

@@ -16,11 +16,25 @@ type EndpointHandler = (
 ) => Promise<unknown>;
 
 abstract class ApiService {
-  static handleError(req: NextApiRequest, res: NextApiResponse, error: unknown) {
-    res.status(500).json(error);
+  static handleError(req: NextApiRequest, res: NextApiResponse, error: Error) {
+    res.status(500).json({
+      exception: {
+        cause: error?.cause,
+        message: error?.message,
+        name: error?.name,
+        req: {
+          body: req.body,
+          headers: req.headers,
+          method: req.method,
+          query: req.query,
+          url: req.url,
+        },
+        timestamp: Date.now(),
+      },
+    });
   }
 
-  static handleNotImplemented(req: NextApiRequest, res: NextApiResponse) {
+  static handleNotImplemented(_: NextApiRequest, res: NextApiResponse) {
     return res.status(405).end();
   }
 
@@ -42,13 +56,12 @@ abstract class ApiService {
         return this.handleResult(req, res, result);
       } catch (error) {
         if (config.node.isDevEnv()) console.error(error);
-        return this.handleError(req, res, error);
+        return this.handleError(req, res, error as Error);
       }
     };
   }
 
-  static handleResult(req: NextApiRequest, res: NextApiResponse, result: unknown) {
-    console.log(result);
+  static handleResult(_: NextApiRequest, res: NextApiResponse, result: unknown) {
     res.status(200).json(result);
   }
 }

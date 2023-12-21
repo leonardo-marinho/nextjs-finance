@@ -2,7 +2,6 @@ import { omit } from 'lodash';
 
 import Body from '../decorators/Body.decorator';
 import Endpoint from '../decorators/Endpoint.decorator';
-import Private from '../decorators/Private.decorator';
 import { AuthSignInBodyDto } from '../dtos/AuthSignInBody.dto';
 import { AuthSignInResponseDto } from '../dtos/AuthSignInResponse.dto';
 import { AuthSignUpBodyDto } from '../dtos/AuthSignUpBody.dto';
@@ -30,12 +29,6 @@ class AuthController {
     body = await parsePayload(body, AuthSignUpBodyDto);
     await UserService.register(body);
     return true;
-  }
-
-  @Private
-  @Endpoint
-  async test(): Promise<string> {
-    return 'Hello World';
   }
 }
 

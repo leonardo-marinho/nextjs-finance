@@ -1,4 +1,5 @@
 import prisma from '@/lib/database';
+import { ApiBadRequestException } from '@/lib/exceptions/ApiBadRequest.exception';
 import { TransactionCategory, TransactionSubCategory } from '@prisma/client';
 
 import { TransactionCategoryCreateBody } from '../dtos/TransactionCategoryCreateBody.dto';
@@ -72,6 +73,13 @@ class TransactionCategoryService {
   }
 
   async remove(id: number): Promise<TransactionCategory> {
+    const expenses = await prisma.transactionExpense.findMany({
+      where: {
+        categoryId: id,
+      },
+    });
+    if (expenses.length) throw new ApiBadRequestException('Category has expenses');
+
     await prisma.transactionSubCategory.deleteMany({
       where: {
         categoryId: id,
@@ -86,6 +94,13 @@ class TransactionCategoryService {
   }
 
   async removeSubCategory(id: number): Promise<TransactionSubCategory> {
+    const expenses = await prisma.transactionExpense.findMany({
+      where: {
+        subCategoryId: id,
+      },
+    });
+    if (expenses.length) throw new ApiBadRequestException('Category has expenses');
+
     return await prisma.transactionSubCategory.delete({
       where: {
         id,

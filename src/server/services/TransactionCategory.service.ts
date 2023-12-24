@@ -1,5 +1,5 @@
 import prisma from '@/lib/database';
-import { Category, SubCategory } from '@prisma/client';
+import { TransactionCategory, TransactionSubCategory } from '@prisma/client';
 
 import { TransactionCategoryCreateBody } from '../dtos/TransactionCategoryCreateBody.dto';
 import { TransactionCategoryFindManyFilters } from '../dtos/TransactionCategoryFindManyFilters.dto';
@@ -9,8 +9,8 @@ import { TransactionSubCategoryFindManyFilters } from '../dtos/TransactionSubCat
 import { TransactionSubCategoryUpdateBody } from '../dtos/TransactionSubCategoryUpdateBody.dto';
 
 class TransactionCategoryService {
-  async create(data: TransactionCategoryCreateBody, userId: number): Promise<Category> {
-    return await prisma.category.create({
+  async create(data: TransactionCategoryCreateBody, userId: number): Promise<TransactionCategory> {
+    return await prisma.transactionCategory.create({
       data: {
         name: data.name,
         userId,
@@ -21,8 +21,8 @@ class TransactionCategoryService {
   async createSubCategory(
     data: TransactionSubCategoryCreateBody,
     userId: number,
-  ): Promise<SubCategory> {
-    return await prisma.subCategory.create({
+  ): Promise<TransactionSubCategory> {
+    return await prisma.transactionSubCategory.create({
       data: {
         categoryId: data.categoryId,
         name: data.name,
@@ -31,8 +31,8 @@ class TransactionCategoryService {
     });
   }
 
-  async findMany(filters?: TransactionCategoryFindManyFilters): Promise<Category[]> {
-    return await prisma.category.findMany({
+  async findMany(filters?: TransactionCategoryFindManyFilters): Promise<TransactionCategory[]> {
+    return await prisma.transactionCategory.findMany({
       include: {
         SubCategories: true,
       },
@@ -52,8 +52,8 @@ class TransactionCategoryService {
 
   async findManySubCategories(
     filters?: TransactionSubCategoryFindManyFilters,
-  ): Promise<SubCategory[]> {
-    return await prisma.subCategory.findMany({
+  ): Promise<TransactionSubCategory[]> {
+    return await prisma.transactionSubCategory.findMany({
       where: {
         categoryId: {
           in: filters?.categoryIds,
@@ -71,30 +71,30 @@ class TransactionCategoryService {
     });
   }
 
-  async remove(id: number): Promise<Category> {
-    await prisma.subCategory.deleteMany({
+  async remove(id: number): Promise<TransactionCategory> {
+    await prisma.transactionSubCategory.deleteMany({
       where: {
         categoryId: id,
       },
     });
 
-    return await prisma.category.delete({
+    return await prisma.transactionCategory.delete({
       where: {
         id,
       },
     });
   }
 
-  async removeSubCategory(id: number): Promise<SubCategory> {
-    return await prisma.subCategory.delete({
+  async removeSubCategory(id: number): Promise<TransactionSubCategory> {
+    return await prisma.transactionSubCategory.delete({
       where: {
         id,
       },
     });
   }
 
-  async update(id: number, data: TransactionCategoryUpdateBody): Promise<Category> {
-    return await prisma.category.update({
+  async update(id: number, data: TransactionCategoryUpdateBody): Promise<TransactionCategory> {
+    return await prisma.transactionCategory.update({
       data: {
         name: data?.name,
       },
@@ -107,8 +107,8 @@ class TransactionCategoryService {
   async updateSubCategory(
     id: number,
     data: TransactionSubCategoryUpdateBody,
-  ): Promise<SubCategory> {
-    return await prisma.subCategory.update({
+  ): Promise<TransactionSubCategory> {
+    return await prisma.transactionSubCategory.update({
       data: {
         name: data?.name,
       },

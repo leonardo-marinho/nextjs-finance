@@ -1,21 +1,20 @@
 import Body from '../decorators/Body.decorator';
 import Endpoint from '../decorators/Endpoint.decorator';
-import { AuthSignInBodyDto } from '../dtos/AuthSignInBody.dto';
-import { AuthSignInResponseDto } from '../dtos/AuthSignInResponse.dto';
-import { AuthSignUpBodyDto } from '../dtos/AuthSignUpBody.dto';
+import { AuthSignInBody } from '../dtos/AuthSignInBody.dto';
+import { AuthSignInResponse } from '../dtos/AuthSignInResponse.dto';
+import { AuthSignUpBody } from '../dtos/AuthSignUpBody.dto';
 import UserService from '../services/User.service';
-import { parsePayload } from '../utils/Api.utils';
 
 class AuthController {
-  @Endpoint
-  async signIn(@Body body: AuthSignInBodyDto): Promise<AuthSignInResponseDto> {
-    body = await parsePayload(body, AuthSignInBodyDto);
+  @Endpoint()
+  async signIn(
+    @Body({ schema: AuthSignInBody }) body: AuthSignInBody,
+  ): Promise<AuthSignInResponse> {
     return await UserService.login(body);
   }
 
-  @Endpoint
-  async signUp(@Body body: AuthSignUpBodyDto): Promise<boolean> {
-    body = await parsePayload(body, AuthSignUpBodyDto);
+  @Endpoint()
+  async signUp(@Body({ schema: AuthSignUpBody }) body: AuthSignUpBody): Promise<boolean> {
     await UserService.register(body);
     return true;
   }

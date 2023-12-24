@@ -3,8 +3,8 @@ import { ApiAuthException } from '@/lib/exceptions/ApiAuth.exception';
 import bcrypt from 'bcryptjs';
 import { omit } from 'lodash';
 
-import { AuthSignInBodyDto } from '../dtos/AuthSignInBody.dto';
-import { AuthSignUpBodyDto } from '../dtos/AuthSignUpBody.dto';
+import { AuthSignInBody } from '../dtos/AuthSignInBody.dto';
+import { AuthSignUpBody } from '../dtos/AuthSignUpBody.dto';
 import AuthService from './Auth.service';
 
 class UserService {
@@ -16,7 +16,7 @@ class UserService {
     });
   }
 
-  async login(body: AuthSignInBodyDto) {
+  async login(body: AuthSignInBody) {
     const user = await this.getByEmail(body.email);
     if (!user) throw new ApiAuthException('User with this email does not exist');
     if (!bcrypt.compareSync(body.password, user.password))
@@ -30,7 +30,7 @@ class UserService {
     };
   }
 
-  async register(body: AuthSignUpBodyDto) {
+  async register(body: AuthSignUpBody) {
     if (await this.getByEmail(body.email))
       throw new ApiAuthException('User with this email already exists');
 

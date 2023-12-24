@@ -4,9 +4,17 @@ export const generateArgRequestMetadata = (
   argName: string,
   target: object,
   propertyKey: string | symbol,
-  argIndex: number,
+  value: unknown,
 ) => {
-  Reflect.defineMetadata(`${propertyKey.toString()}-arg-${argName}`, argIndex, target, propertyKey);
+  Reflect.defineMetadata(`${propertyKey.toString()}-arg-${argName}`, value, target, propertyKey);
+};
+
+export const getArgRequestMetadata = <TValue>(
+  argName: string,
+  target: object,
+  propertyKey: string | symbol,
+): TValue | undefined => {
+  return Reflect.getMetadata(`${propertyKey.toString()}-arg-${argName}`, target, propertyKey);
 };
 
 export const processArgRequestMetadata = <TValue>(
@@ -16,7 +24,7 @@ export const processArgRequestMetadata = <TValue>(
   target: object,
   propertyKey: string | symbol,
 ) => {
-  if (Reflect.hasMetadata(`${propertyKey.toString()}-arg-body`, target, propertyKey)) {
+  if (Reflect.hasMetadata(`${propertyKey.toString()}-arg-${argName}`, target, propertyKey)) {
     const bodyArgIndex = Reflect.getMetadata(
       `${propertyKey.toString()}-arg-${argName}`,
       target,

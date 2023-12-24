@@ -7,19 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Expense {
-  id          Int       @id @default(autoincrement())
-  bankAccountId Int
-  bankAccount BankAccount @relation(fields: [bankAccountId], references: [id])
-  userId      Int
-  user        User      @relation(fields: [userId], references: [id])
-  description String
-  amount      Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime? @updatedAt
-  deletedAt   Boolean   @default(false)
-}
-
 enum BankAccountType {
   Checking
   Savings
@@ -35,7 +22,50 @@ model BankAccount {
   createdAt DateTime        @default(now())
   updatedAt DateTime?       @updatedAt
   deletedAt Boolean         @default(false)
-  expenses  Expense[]
+  TransactionExpenses TransactionExpense[]
+}
+
+model TransactionCategory {
+  id        Int             @id @default(autoincrement())
+  userId    Int
+  user      User            @relation(fields: [userId], references: [id])
+  name      String
+  createdAt DateTime        @default(now())
+  updatedAt DateTime?       @updatedAt
+  deletedAt Boolean         @default(false)
+  SubCategories TransactionSubCategory[]
+  TransactionExpenses TransactionExpense[]
+}
+
+model TransactionExpense {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  bankAccountId Int
+  bankAccount BankAccount @relation(fields: [bankAccountId], references: [id])
+  categoryId  Int?
+  category    TransactionCategory? @relation(fields: [categoryId], references: [id])
+  subCategoryId Int?
+  subCategory TransactionSubCategory? @relation(fields: [subCategoryId], references: [id])
+  description String
+  amount      Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  deletedAt   Boolean   @default(false)
+}
+
+
+model TransactionSubCategory {
+  id        Int             @id @default(autoincrement())
+  userId    Int
+  user      User            @relation(fields: [userId], references: [id])
+  categoryId Int
+  category  TransactionCategory        @relation(fields: [categoryId], references: [id])
+  name      String
+  createdAt DateTime        @default(now())
+  updatedAt DateTime?       @updatedAt
+  deletedAt Boolean         @default(false)
+  TransactionExpenses TransactionExpense[]
 }
 
 model User {
@@ -46,5 +76,7 @@ model User {
   updatedAt    DateTime?     @updatedAt
   deletedAt    Boolean       @default(false)
   bankAccounts BankAccount[]
-  expenses     Expense[]
+  expenses     TransactionExpense[]
+  transactionCategories   TransactionCategory[]
+  transactionSubCategories TransactionSubCategory[]
 }

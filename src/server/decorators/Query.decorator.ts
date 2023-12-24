@@ -2,16 +2,16 @@ import { ClassConstructor } from 'class-transformer';
 
 import { generateArgRequestMetadata } from '../utils/Decorator.utils';
 
-interface BodyOptions {
+interface QueryOptions {
   schema?: ClassConstructor<unknown>;
 }
 
-const Body = (options?: BodyOptions) => {
+const Query = (options?: QueryOptions) => {
   return (target: object, propertyKey: string | symbol, argIndex: number) => {
-    generateArgRequestMetadata('body', target, propertyKey, argIndex);
+    generateArgRequestMetadata('query', target, propertyKey, argIndex);
     if (options?.schema)
-      generateArgRequestMetadata('bodySchema', target, propertyKey, options?.schema);
+      generateArgRequestMetadata('querySchema', target, propertyKey, options?.schema);
   };
 };
 
-export default Body;
+export default Query;

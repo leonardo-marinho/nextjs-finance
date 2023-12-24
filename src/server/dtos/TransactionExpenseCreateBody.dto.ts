@@ -1,5 +1,5 @@
 import { TransactionCategoryType, TransactionPaymentMethodType } from '@/lib/enums/Transaction';
-import { IsDate, IsEnum, IsInt, IsNumber, IsString } from 'class-validator';
+import { IsDateString, IsEnum, IsInt, IsNumber, IsString } from 'class-validator';
 
 export class TransactionExpenseCreateBody {
   @IsNumber()
@@ -11,7 +11,7 @@ export class TransactionExpenseCreateBody {
   @IsEnum(TransactionCategoryType)
   categoryType: TransactionCategoryType;
 
-  @IsDate()
+  @IsDateString()
   date: Date;
 
   @IsString()

@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsDate, IsOptional } from 'class-validator';
+import { IsArray, IsDateString, IsOptional } from 'class-validator';
 
 export class TransactionExpenseFindManyFilters {
   @IsOptional()
@@ -23,7 +23,7 @@ export class TransactionExpenseFindManyFilters {
   dates: Date[];
 
   @IsOptional()
-  @IsDate()
+  @IsDateString()
   endDate: Date;
 
   @IsOptional()
@@ -32,7 +32,7 @@ export class TransactionExpenseFindManyFilters {
   ids: number[];
 
   @IsOptional()
-  @IsDate()
+  @IsDateString()
   startDate: Date;
 
   @IsOptional()

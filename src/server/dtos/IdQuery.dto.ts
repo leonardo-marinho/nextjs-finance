@@ -1,8 +1,8 @@
 import { Transform, TransformFnParams } from 'class-transformer';
-import { IsNumber } from 'class-validator';
+import { IsInt } from 'class-validator';
 
 export class IdQuery {
-  @IsNumber()
+  @IsInt()
   @Transform((params: TransformFnParams) => Number.parseInt(params.value, 10))
   id: number;
 }

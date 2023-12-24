@@ -104,7 +104,11 @@ class TransactionExpenseService {
   }
 
   async update(id: number, data: TransactionExpenseUpdateBody): Promise<TransactionExpense> {
-    const updateData: Prisma.TransactionExpenseUncheckedUpdateInput = {};
+    const updateData: Prisma.TransactionExpenseUncheckedUpdateInput = {
+      amount: data?.amount,
+      date: data?.date,
+      description: data?.description,
+    };
 
     if (data.paymentMethodType === TransactionPaymentMethodType.BANK_ACCOUNT) {
       updateData.bankAccountId = data.paymentMethodId;

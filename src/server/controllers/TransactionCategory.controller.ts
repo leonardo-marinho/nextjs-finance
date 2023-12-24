@@ -29,9 +29,10 @@ class TransactionCategoryController {
 
   @Endpoint({ private: true })
   async findMany(
-    @Body({ schema: TransactionCategoryFindManyBody }) { filters }: TransactionCategoryFindManyBody,
+    @Body({ schema: TransactionCategoryFindManyBody })
+    body?: TransactionCategoryFindManyBody,
   ) {
-    return await TransactionCategory.findMany(filters);
+    return await TransactionCategory.findMany(body?.filters);
   }
 
   @Endpoint({ private: true })

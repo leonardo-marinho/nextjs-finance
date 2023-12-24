@@ -1,4 +1,5 @@
 import prisma from '@/lib/database';
+import { ApiBadRequestException } from '@/lib/exceptions/ApiBadRequest.exception';
 import { BankAccount } from '@prisma/client';
 
 import { BankAccountCreateBody } from '../dtos/BankAccountCreateBody.dto';
@@ -35,22 +36,20 @@ class BankAccountService {
     });
   }
 
-  async remove(id: number): Promise<boolean> {
-    await prisma.bankAccount.delete({
+  async remove(id: number): Promise<BankAccount> {
+    if (await prisma.transactionExpense.count({ where: { bankAccountId: id } }))
+      throw new ApiBadRequestException('Cannot delete credit card with transactions');
+
+    return await prisma.bankAccount.delete({
       where: {
         id,
       },
     });
-
-    return true;
   }
 
   async update(id: number, data: BankAccountUpdateBody): Promise<BankAccount> {
     return await prisma.bankAccount.update({
-      data: {
-        name: data?.name,
-        type: data?.type,
-      },
+      data,
       where: {
         id,
       },

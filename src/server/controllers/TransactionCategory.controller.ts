@@ -8,7 +8,7 @@ import { TransactionCategoryFindManyBody } from '../dtos/TransactionCategoryFind
 import { TransactionCategoryUpdateBody } from '../dtos/TransactionCategoryUpdateBody.dto';
 import { TransactionSubCategoryCreateBody } from '../dtos/TransactionSubCategoryCreateBody.dto';
 import { TransactionSubCategoryFindManyBody } from '../dtos/TransactionSubCategoryFindManyBody.dto';
-import CategoryService from '../services/TransactionCategory.service';
+import TransactionCategory from '../services/TransactionCategory.service';
 
 class TransactionCategoryController {
   @Endpoint({ private: true })
@@ -16,7 +16,7 @@ class TransactionCategoryController {
     @Body({ schema: TransactionCategoryCreateBody }) body: TransactionCategoryCreateBody,
     @UserId userId: number,
   ) {
-    return await CategoryService.create(body, userId);
+    return await TransactionCategory.create(body, userId);
   }
 
   @Endpoint({ private: true })
@@ -24,14 +24,15 @@ class TransactionCategoryController {
     @Body({ schema: TransactionSubCategoryCreateBody }) body: TransactionSubCategoryCreateBody,
     @UserId userId: number,
   ) {
-    return await CategoryService.createSubCategory(body, userId);
+    return await TransactionCategory.createSubCategory(body, userId);
   }
 
   @Endpoint({ private: true })
   async findMany(
-    @Body({ schema: TransactionCategoryFindManyBody }) { filters }: TransactionCategoryFindManyBody,
+    @Body({ schema: TransactionCategoryFindManyBody })
+    body?: TransactionCategoryFindManyBody,
   ) {
-    return await CategoryService.findMany(filters);
+    return await TransactionCategory.findMany(body?.filters);
   }
 
   @Endpoint({ private: true })
@@ -39,17 +40,17 @@ class TransactionCategoryController {
     @Body({ schema: TransactionSubCategoryFindManyBody })
     { filters }: TransactionSubCategoryFindManyBody,
   ) {
-    return await CategoryService.findManySubCategories(filters);
+    return await TransactionCategory.findManySubCategories(filters);
   }
 
   @Endpoint({ private: true })
   async remove(@Query({ schema: IdQuery }) { id }: IdQuery) {
-    return await CategoryService.remove(id);
+    return await TransactionCategory.remove(id);
   }
 
   @Endpoint({ private: true })
   async removeSubCategory(@Query({ schema: IdQuery }) { id }: IdQuery) {
-    return await CategoryService.removeSubCategory(id);
+    return await TransactionCategory.removeSubCategory(id);
   }
 
   @Endpoint({ private: true })
@@ -57,7 +58,7 @@ class TransactionCategoryController {
     @Query({ schema: IdQuery }) { id }: IdQuery,
     @Body({ schema: TransactionCategoryUpdateBody }) body: TransactionCategoryUpdateBody,
   ) {
-    return await CategoryService.update(id, body);
+    return await TransactionCategory.update(id, body);
   }
 
   @Endpoint({ private: true })
@@ -65,7 +66,7 @@ class TransactionCategoryController {
     @Query({ schema: IdQuery }) { id }: IdQuery,
     @Body({ schema: TransactionCategoryUpdateBody }) body: TransactionCategoryUpdateBody,
   ) {
-    return await CategoryService.updateSubCategory(id, body);
+    return await TransactionCategory.updateSubCategory(id, body);
   }
 }
 

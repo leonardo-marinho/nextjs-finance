@@ -22,6 +22,22 @@ model BankAccount {
   createdAt DateTime        @default(now())
   updatedAt DateTime?       @updatedAt
   deletedAt Boolean         @default(false)
+  CreditCards CreditCard[]
+  TransactionExpenses TransactionExpense[]
+}
+
+model CreditCard {
+  id        Int             @id @default(autoincrement())
+  userId    Int
+  user      User            @relation(fields: [userId], references: [id])
+  bankAccountId Int
+  bankAccount BankAccount @relation(fields: [bankAccountId], references: [id])
+  name      String
+  limit     Float
+  createdAt DateTime        @default(now())
+  updatedAt DateTime?       @updatedAt
+  deletedAt Boolean         @default(false)
+  TransactionExpenses TransactionExpense[]
 }
 
 model TransactionCategory {
@@ -33,7 +49,29 @@ model TransactionCategory {
   updatedAt DateTime?       @updatedAt
   deletedAt Boolean         @default(false)
   SubCategories TransactionSubCategory[]
+  TransactionExpenses TransactionExpense[]
 }
+
+model TransactionExpense {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  bankAccountId Int
+  bankAccount BankAccount @relation(fields: [bankAccountId], references: [id])
+  creditCardId Int?
+  creditCard  CreditCard? @relation(fields: [creditCardId], references: [id])
+  categoryId  Int
+  category    TransactionCategory? @relation(fields: [categoryId], references: [id])
+  subCategoryId Int?
+  subCategory TransactionSubCategory? @relation(fields: [subCategoryId], references: [id])
+  description String
+  amount      Float
+  date        DateTime
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  deletedAt   Boolean   @default(false)
+}
+
 
 model TransactionSubCategory {
   id        Int             @id @default(autoincrement())
@@ -45,6 +83,7 @@ model TransactionSubCategory {
   createdAt DateTime        @default(now())
   updatedAt DateTime?       @updatedAt
   deletedAt Boolean         @default(false)
+  TransactionExpenses TransactionExpense[]
 }
 
 model User {
@@ -54,7 +93,9 @@ model User {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime?     @updatedAt
   deletedAt    Boolean       @default(false)
-  bankAccounts BankAccount[]
-  transactionCategories   TransactionCategory[]
-  transactionSubCategories TransactionSubCategory[]
+  BankAccounts BankAccount[]
+  CreditCards  CreditCard[]
+  Expenses     TransactionExpense[]
+  TransactionCategories   TransactionCategory[]
+  TransactionSubCategories TransactionSubCategory[]
 }

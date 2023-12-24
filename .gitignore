@@ -26,7 +26,7 @@ npm-debug.log*
 .vercel
 
 # scripts 
-src/lib/**/*.js
+scripts
 
 # typescript
 *.tsbuildinfo

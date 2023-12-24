@@ -15,7 +15,7 @@
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
     "db:reseed": "npm run db:reset && npm run db:seed",
-    "db:seed": "tsc ./src/lib/scripts/DevelopmentSeed.script.ts && node ./src/lib/scripts/DevelopmentSeed.script.js"
+    "db:seed": "tsc --outDir scripts ./src/lib/scripts/DevelopmentSeed.script.ts && node scripts/DevelopmentSeed.script.js"
   },
   "dependencies": {
     "@prisma/client": "^5.6.0",

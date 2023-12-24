@@ -44,7 +44,7 @@ class TransactionExpenseService {
       if (!subCategory) throw new ApiBadRequestException('Sub category not found');
       createData.categoryId = subCategory?.categoryId;
       createData.subCategoryId = data.categoryId;
-    }
+    } else throw new ApiBadRequestException('Invalid category type');
 
     const transaction = await prisma.transactionExpense.create({
       data: createData,
@@ -134,7 +134,7 @@ class TransactionExpenseService {
       if (!subCategory) throw new ApiBadRequestException('Sub category not found');
       updateData.categoryId = subCategory.categoryId;
       updateData.subCategoryId = data.categoryId;
-    }
+    } else throw new ApiBadRequestException('Invalid category type');
 
     return await prisma.transactionExpense.update({
       data: updateData,

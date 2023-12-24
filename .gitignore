@@ -25,6 +25,9 @@ npm-debug.log*
 # vercel
 .vercel
 
+# scripts 
+src/lib/**/*.js
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

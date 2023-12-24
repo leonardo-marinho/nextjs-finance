@@ -7,6 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Expense {
+  id          Int       @id @default(autoincrement())
+  bankAccountId Int
+  bankAccount BankAccount @relation(fields: [bankAccountId], references: [id])
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  description String
+  amount      Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  deletedAt   Boolean   @default(false)
+}
+
 enum BankAccountType {
   Checking
   Savings
@@ -22,6 +35,7 @@ model BankAccount {
   createdAt DateTime        @default(now())
   updatedAt DateTime?       @updatedAt
   deletedAt Boolean         @default(false)
+  expenses  Expense[]
 }
 
 model User {
@@ -32,4 +46,5 @@ model User {
   updatedAt    DateTime?     @updatedAt
   deletedAt    Boolean       @default(false)
   bankAccounts BankAccount[]
+  expenses     Expense[]
 }

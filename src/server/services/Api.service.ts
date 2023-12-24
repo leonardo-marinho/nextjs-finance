@@ -1,5 +1,8 @@
 import config from '@/lib/config';
+import { ApiResponse } from '@/lib/types/Api.types';
 import { NextApiRequest, NextApiResponse } from 'next';
+
+const METHODS_WITH_DATA = ['GET'];
 
 interface ApiServiceHandlerOpts {
   delete?: unknown;
@@ -34,8 +37,21 @@ abstract class ApiService {
     });
   }
 
-  static handleNotImplemented(_: NextApiRequest, res: NextApiResponse) {
-    return res.status(405).end();
+  static handleNotImplemented(req: NextApiRequest, res: NextApiResponse) {
+    return res.status(405).json({
+      exception: {
+        message: 'Method not implemented',
+        name: 'NotImplementedException',
+        req: {
+          body: req.body,
+          headers: req.headers,
+          method: req.method,
+          query: req.query,
+          url: req.url,
+        },
+        timestamp: Date.now(),
+      },
+    });
   }
 
   static handler({ delete: remove, get, patch, post, put }: ApiServiceHandlerOpts) {
@@ -61,8 +77,14 @@ abstract class ApiService {
     };
   }
 
-  static handleResult(_: NextApiRequest, res: NextApiResponse, result: unknown) {
-    res.status(200).json(result);
+  static handleResult(req: NextApiRequest, res: NextApiResponse, result: unknown) {
+    const response: ApiResponse = {
+      success: !!result,
+    };
+
+    if (METHODS_WITH_DATA.includes(req.method!)) response.result = result;
+
+    res.status(200).json(response);
   }
 }
 

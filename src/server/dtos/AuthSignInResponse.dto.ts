@@ -1,4 +1,4 @@
-export interface AuthSignInResponseDto {
+export interface AuthSignInResponse {
   refreshToken: string;
   token: string;
 }

@@ -60,6 +60,23 @@ CREATE TABLE "TransactionExpense" (
 );
 
 -- CreateTable
+CREATE TABLE "TransactionRevenue" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "bankAccountId" INTEGER NOT NULL,
+    "categoryId" INTEGER NOT NULL,
+    "subCategoryId" INTEGER,
+    "description" TEXT NOT NULL,
+    "amount" DOUBLE PRECISION NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3),
+    "deletedAt" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "TransactionRevenue_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "TransactionSubCategory" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
@@ -113,6 +130,18 @@ ALTER TABLE "TransactionExpense" ADD CONSTRAINT "TransactionExpense_categoryId_f
 
 -- AddForeignKey
 ALTER TABLE "TransactionExpense" ADD CONSTRAINT "TransactionExpense_subCategoryId_fkey" FOREIGN KEY ("subCategoryId") REFERENCES "TransactionSubCategory"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TransactionRevenue" ADD CONSTRAINT "TransactionRevenue_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TransactionRevenue" ADD CONSTRAINT "TransactionRevenue_bankAccountId_fkey" FOREIGN KEY ("bankAccountId") REFERENCES "BankAccount"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TransactionRevenue" ADD CONSTRAINT "TransactionRevenue_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "TransactionCategory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TransactionRevenue" ADD CONSTRAINT "TransactionRevenue_subCategoryId_fkey" FOREIGN KEY ("subCategoryId") REFERENCES "TransactionSubCategory"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "TransactionSubCategory" ADD CONSTRAINT "TransactionSubCategory_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

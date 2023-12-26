@@ -97,6 +97,7 @@ class TransactionRevenueService {
               },
             }
           : {}),
+        ignoreTransaction: !!filters?.ignoredTransactions,
         userId: {
           in: filters?.userIds,
         },
@@ -153,7 +154,6 @@ class TransactionRevenueService {
       updateData.categoryId = subCategory.categoryId;
       updateData.subCategoryId = data.categoryId;
     }
-    console.log(1);
     return await prisma.transactionRevenue.update({
       data: updateData,
       where: {

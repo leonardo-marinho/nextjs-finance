@@ -115,6 +115,7 @@ class TransactionExpenseService {
               },
             }
           : {}),
+        ignoreTransaction: !!filters?.ignoredTransactions,
         userId: {
           in: filters?.userIds,
         },

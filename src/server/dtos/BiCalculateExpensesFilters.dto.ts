@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsArray, IsDateString, IsInt, IsOptional } from 'class-validator';
 
-export class BiCalculateBalanceFilters {
+export class BiCalculateExpensesFilters {
   @IsOptional()
   @IsInt()
   bankAccountId?: number;
@@ -10,6 +10,11 @@ export class BiCalculateBalanceFilters {
   @IsArray()
   @Type(() => Number)
   categoryIds?: number[];
+
+  @IsOptional()
+  @IsArray()
+  @Type(() => Number)
+  creditCardId?: number[];
 
   @IsDateString()
   endDate: Date;

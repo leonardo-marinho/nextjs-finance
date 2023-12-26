@@ -12,10 +12,13 @@ class TransactionExpenseService {
     const createData: Prisma.TransactionExpenseUncheckedCreateInput = {
       amount: data.amount,
       bankAccountId: 0,
+      calculationDate: data.calculationDate || data.date,
       categoryId: 0,
       creditCardId: null,
       date: data.date,
       description: data.description,
+      ignoreTransaction: data.ignoreTransaction || false,
+      installments: data.installments || 1,
       subCategoryId: null,
       userId,
     };
@@ -58,7 +61,6 @@ class TransactionExpenseService {
 
     if ((filters?.startDate || filters?.endDate) && filters?.dates)
       throw new ApiBadRequestException('Passing dates and startDate/endDate is not allowed');
-
     if (filters?.dates) {
       whereDateArgs.in = filters?.dates;
     } else if (filters?.startDate && filters?.endDate) {
@@ -68,6 +70,21 @@ class TransactionExpenseService {
       whereDateArgs.gte = filters?.startDate;
     } else if (filters?.endDate) {
       whereDateArgs.lte = filters?.endDate;
+    }
+
+    if ((filters?.startCalculationDate || filters?.endCalculationDate) && filters?.calculationDates)
+      throw new ApiBadRequestException(
+        'Passing calculation dates and startDate/endDate is not allowed',
+      );
+    if (filters?.calculationDates) {
+      whereDateArgs.in = filters?.calculationDates;
+    } else if (filters?.startCalculationDate && filters?.endCalculationDate) {
+      whereDateArgs.gte = filters?.startCalculationDate;
+      whereDateArgs.lte = filters?.endCalculationDate;
+    } else if (filters?.startCalculationDate) {
+      whereDateArgs.gte = filters?.startCalculationDate;
+    } else if (filters?.endCalculationDate) {
+      whereDateArgs.lte = filters?.endCalculationDate;
     }
 
     return await prisma.transactionExpense.findMany({
@@ -106,8 +123,11 @@ class TransactionExpenseService {
   async update(id: number, data: TransactionExpenseUpdateBody): Promise<TransactionExpense> {
     const updateData: Prisma.TransactionExpenseUncheckedUpdateInput = {
       amount: data?.amount,
+      calculationDate: data?.calculationDate,
       date: data?.date,
       description: data?.description,
+      ignoreTransaction: data?.ignoreTransaction,
+      installments: data?.installments,
     };
 
     if (data.paymentMethodType === TransactionPaymentMethodType.BANK_ACCOUNT) {

@@ -1,5 +1,13 @@
 import { TransactionCategoryType } from '@/lib/enums/Transaction';
-import { IsDateString, IsEnum, IsInt, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBooleanString,
+  IsDateString,
+  IsEnum,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class TransactionRevenueUpdateBody {
   @IsOptional()
@@ -9,6 +17,10 @@ export class TransactionRevenueUpdateBody {
   @IsOptional()
   @IsInt()
   bankAccountId?: number;
+
+  @IsOptional()
+  @IsDateString()
+  calculationDate?: Date;
 
   @IsOptional()
   @IsInt()
@@ -25,4 +37,8 @@ export class TransactionRevenueUpdateBody {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @IsOptional()
+  @IsBooleanString()
+  ignoreTransaction?: boolean;
 }

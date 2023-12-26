@@ -1,11 +1,16 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsDateString, IsOptional } from 'class-validator';
+import { IsArray, IsBooleanString, IsDateString, IsOptional } from 'class-validator';
 
 export class TransactionRevenueFindManyFilters {
   @IsOptional()
   @IsArray()
   @Type(() => Number)
   bankAccountIds: number[];
+
+  @IsOptional()
+  @IsArray()
+  @Type(() => Date)
+  calculationDates: Date[];
 
   @IsOptional()
   @IsArray()
@@ -24,12 +29,24 @@ export class TransactionRevenueFindManyFilters {
 
   @IsOptional()
   @IsDateString()
+  endCalculationDate: Date;
+
+  @IsOptional()
+  @IsDateString()
   endDate: Date;
 
   @IsOptional()
   @IsArray()
   @Type(() => Number)
   ids: number[];
+
+  @IsOptional()
+  @IsBooleanString()
+  ignoredTransactions?: boolean;
+
+  @IsOptional()
+  @IsDateString()
+  startCalculationDate: Date;
 
   @IsOptional()
   @IsDateString()

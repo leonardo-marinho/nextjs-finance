@@ -68,7 +68,10 @@ model TransactionExpense {
   subCategory TransactionSubCategory? @relation(fields: [subCategoryId], references: [id])
   description String
   amount      Float
+  installments Int?      @default(1)
+  ignoreTransaction Boolean @default(false)
   date        DateTime
+  calculationDate DateTime
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
   deletedAt   Boolean   @default(false)
@@ -86,7 +89,9 @@ model TransactionRevenue {
   subCategory TransactionSubCategory? @relation(fields: [subCategoryId], references: [id])
   description String
   amount      Float
+  ignoreTransaction Boolean @default(false)
   date        DateTime
+  calculationDate DateTime
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
   deletedAt   Boolean   @default(false)

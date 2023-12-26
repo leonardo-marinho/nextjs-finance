@@ -12,9 +12,11 @@ class TransactionRevenueService {
     const createData: Prisma.TransactionRevenueUncheckedCreateInput = {
       amount: data.amount,
       bankAccountId: data.bankAccountId,
+      calculationDate: data.calculationDate || data.date,
       categoryId: 0,
       date: data.date,
       description: data.description,
+      ignoreTransaction: data.ignoreTransaction || false,
       subCategoryId: null,
       userId,
     };
@@ -44,7 +46,6 @@ class TransactionRevenueService {
 
     if ((filters?.startDate || filters?.endDate) && filters?.dates)
       throw new ApiBadRequestException('Passing dates and startDate/endDate is not allowed');
-
     if (filters?.dates) {
       whereDateArgs.in = filters?.dates;
     } else if (filters?.startDate && filters?.endDate) {
@@ -54,6 +55,21 @@ class TransactionRevenueService {
       whereDateArgs.gte = filters?.startDate;
     } else if (filters?.endDate) {
       whereDateArgs.lte = filters?.endDate;
+    }
+
+    if ((filters?.startCalculationDate || filters?.endCalculationDate) && filters?.calculationDates)
+      throw new ApiBadRequestException(
+        'Passing calculation dates and startDate/endDate is not allowed',
+      );
+    if (filters?.calculationDates) {
+      whereDateArgs.in = filters?.calculationDates;
+    } else if (filters?.startCalculationDate && filters?.endCalculationDate) {
+      whereDateArgs.gte = filters?.startCalculationDate;
+      whereDateArgs.lte = filters?.endCalculationDate;
+    } else if (filters?.startCalculationDate) {
+      whereDateArgs.gte = filters?.startCalculationDate;
+    } else if (filters?.endCalculationDate) {
+      whereDateArgs.lte = filters?.endCalculationDate;
     }
 
     return await prisma.transactionRevenue.findMany({
@@ -90,8 +106,10 @@ class TransactionRevenueService {
     const updateData: Prisma.TransactionRevenueUncheckedUpdateInput = {
       amount: data?.amount,
       bankAccountId: data?.bankAccountId,
+      calculationDate: data?.calculationDate,
       date: data?.date,
       description: data?.description,
+      ignoreTransaction: data?.ignoreTransaction,
     };
 
     if (data?.categoryType === TransactionCategoryType.MAIN_CATEGORY) {

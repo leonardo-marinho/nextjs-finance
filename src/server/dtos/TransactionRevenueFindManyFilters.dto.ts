@@ -1,3 +1,4 @@
+import { TransactionTransferVariant } from '@prisma/client';
 import { Type } from 'class-transformer';
 import { IsArray, IsBooleanString, IsDateString, IsOptional } from 'class-validator';
 
@@ -66,4 +67,8 @@ export class TransactionRevenueFindManyFilters {
   @IsArray()
   @Type(() => Number)
   userIds: number[];
+
+  @IsOptional()
+  @IsArray()
+  variants?: TransactionTransferVariant[];
 }

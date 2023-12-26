@@ -1,7 +1,7 @@
 import prisma from '@/lib/database';
 import { TransactionCategoryType } from '@/lib/enums/Transaction';
 import { ApiBadRequestException } from '@/lib/exceptions/ApiBadRequest.exception';
-import { Prisma, TransactionRevenue } from '@prisma/client';
+import { Prisma, TransactionRevenue, TransactionTransferVariant } from '@prisma/client';
 
 import { TransactionRevenueCreateBody } from '../dtos/TransactionRevenueCreateBody.dto';
 import { TransactionRevenueFindManyFilters } from '../dtos/TransactionRevenueFindManyFilters.dto';
@@ -21,6 +21,7 @@ class TransactionRevenueService {
       subCategoryId: null,
       tags: data?.tags,
       userId,
+      variant: data?.variant,
     };
 
     if (data.categoryType === TransactionCategoryType.MAIN_CATEGORY) {
@@ -99,11 +100,25 @@ class TransactionRevenueService {
         userId: {
           in: filters?.userIds,
         },
+        variant: {
+          in: filters?.variants,
+        },
       },
     });
   }
 
   async remove(id: number): Promise<TransactionRevenue> {
+    const transaction = await prisma.transactionExpense.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (transaction?.variant === TransactionTransferVariant.Transfer)
+      throw new ApiBadRequestException(
+        'Transaction cannot be removed because it is linked to a transfer',
+      );
+
     return await prisma.transactionRevenue.delete({
       where: {
         id,
@@ -121,6 +136,7 @@ class TransactionRevenueService {
       ignoreTransaction: data?.ignoreTransaction,
       observation: data?.observation,
       tags: data?.tags,
+      variant: data?.variant,
     };
 
     if (data?.categoryType === TransactionCategoryType.MAIN_CATEGORY) {

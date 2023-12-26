@@ -1,5 +1,4 @@
-import { TransactionCategoryType, TransactionPaymentMethodType } from '@/lib/enums/Transaction';
-import { TransactionTransferVariant } from '@prisma/client';
+import { TransactionCategoryType } from '@/lib/enums/Transaction';
 import { Type } from 'class-transformer';
 import {
   IsArray,
@@ -12,7 +11,8 @@ import {
   IsString,
 } from 'class-validator';
 
-export class TransactionExpenseCreateBody {
+export class TransactionTransferUpdateBody {
+  @IsOptional()
   @IsNumber()
   amount: number;
 
@@ -20,42 +20,40 @@ export class TransactionExpenseCreateBody {
   @IsDateString()
   calculationDate?: Date;
 
+  @IsOptional()
   @IsInt()
   categoryId: number;
 
+  @IsOptional()
   @IsEnum(TransactionCategoryType)
   categoryType: TransactionCategoryType;
 
+  @IsOptional()
   @IsDateString()
   date: Date;
 
+  @IsOptional()
   @IsString()
   description: string;
+
+  @IsOptional()
+  @IsInt()
+  destinationBankAccountId: number;
 
   @IsOptional()
   @IsBooleanString()
   ignoreTransaction?: boolean;
 
   @IsOptional()
-  @IsInt()
-  installments?: number;
-
-  @IsOptional()
   @IsString()
   observation?: string;
 
+  @IsOptional()
   @IsInt()
-  paymentMethodId: number;
-
-  @IsEnum(TransactionPaymentMethodType)
-  paymentMethodType: TransactionPaymentMethodType;
+  originBankAccountId: number;
 
   @IsOptional()
   @IsArray()
   @Type(() => String)
   tags?: string[];
-
-  @IsOptional()
-  @IsEnum(TransactionTransferVariant)
-  variant?: TransactionTransferVariant;
 }

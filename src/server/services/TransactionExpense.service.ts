@@ -1,7 +1,7 @@
 import prisma from '@/lib/database';
 import { TransactionCategoryType, TransactionPaymentMethodType } from '@/lib/enums/Transaction';
 import { ApiBadRequestException } from '@/lib/exceptions/ApiBadRequest.exception';
-import { Prisma, TransactionExpense } from '@prisma/client';
+import { Prisma, TransactionExpense, TransactionTransferVariant } from '@prisma/client';
 
 import { TransactionExpenseCreateBody } from '../dtos/TransactionExpenseCreateBody.dto';
 import { TransactionExpenseFindManyFilters } from '../dtos/TransactionExpenseFindManyFilters.dto';
@@ -23,6 +23,7 @@ class TransactionExpenseService {
       subCategoryId: null,
       tags: data?.tags,
       userId,
+      variant: data?.variant,
     };
 
     if (data.paymentMethodType === TransactionPaymentMethodType.BANK_ACCOUNT) {
@@ -117,11 +118,25 @@ class TransactionExpenseService {
         userId: {
           in: filters?.userIds,
         },
+        variant: {
+          in: filters?.variants,
+        },
       },
     });
   }
 
   async remove(id: number): Promise<TransactionExpense> {
+    const transaction = await prisma.transactionExpense.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (transaction?.variant === TransactionTransferVariant.Transfer)
+      throw new ApiBadRequestException(
+        'Transaction cannot be removed because it is linked to a transfer',
+      );
+
     return await prisma.transactionExpense.delete({
       where: {
         id,
@@ -139,11 +154,17 @@ class TransactionExpenseService {
       installments: data?.installments,
       observation: data?.observation,
       tags: data?.tags,
+      variant: data?.variant,
     };
 
-    if (data.paymentMethodType === TransactionPaymentMethodType.BANK_ACCOUNT) {
+    if (
+      (data?.paymentMethodType && !data?.paymentMethodId) ||
+      (!data?.paymentMethodType && data?.paymentMethodId)
+    )
+      throw new ApiBadRequestException('Passing paymentMethodType and paymentMethodId is required');
+    if (data?.paymentMethodType === TransactionPaymentMethodType.BANK_ACCOUNT) {
       updateData.bankAccountId = data.paymentMethodId;
-    } else if (data.paymentMethodType === TransactionPaymentMethodType.CREDIT_CARD) {
+    } else if (data?.paymentMethodType === TransactionPaymentMethodType.CREDIT_CARD) {
       const creditCart = await prisma.creditCard.findUnique({
         where: {
           id: data.paymentMethodId,
@@ -154,6 +175,8 @@ class TransactionExpenseService {
       updateData.bankAccountId = creditCart?.bankAccountId;
     }
 
+    if ((data?.categoryType && !data?.categoryId) || (!data?.categoryType && data?.categoryId))
+      throw new ApiBadRequestException('Passing categoryType and categoryId is required');
     if (data?.categoryType === TransactionCategoryType.MAIN_CATEGORY) {
       updateData.categoryId = data.categoryId;
     } else if (data?.categoryType === TransactionCategoryType.SUB_CATEGORY) {
@@ -165,7 +188,7 @@ class TransactionExpenseService {
       if (!subCategory) throw new ApiBadRequestException('Sub category not found');
       updateData.categoryId = subCategory.categoryId;
       updateData.subCategoryId = data.categoryId;
-    } else throw new ApiBadRequestException('Invalid category type');
+    }
 
     return await prisma.transactionExpense.update({
       data: updateData,

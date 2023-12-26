@@ -8,7 +8,6 @@ import { CreditCardUpdateBody } from '../dtos/CreditCardUpdateBody.dto';
 
 class CreditCardService {
   async create(data: CreditCardCreateBody, userId: number): Promise<CreditCard> {
-    console.log(2);
     return await prisma.creditCard.create({
       data: {
         bankAccountId: data.bankAccountId,

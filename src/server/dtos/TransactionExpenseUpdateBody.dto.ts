@@ -1,4 +1,5 @@
 import { TransactionCategoryType, TransactionPaymentMethodType } from '@/lib/enums/Transaction';
+import { TransactionTransferVariant } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   IsArray,
@@ -60,4 +61,8 @@ export class TransactionExpenseUpdateBody {
   @IsArray()
   @Type(() => String)
   tags?: string[];
+
+  @IsOptional()
+  @IsEnum(TransactionTransferVariant)
+  variant?: TransactionTransferVariant;
 }

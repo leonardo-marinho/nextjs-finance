@@ -1,6 +1,12 @@
 -- CreateEnum
 CREATE TYPE "BankAccountType" AS ENUM ('Checking', 'Savings');
 
+-- CreateEnum
+CREATE TYPE "TransactionTransferVariant" AS ENUM ('Regular', 'Transfer', 'Archived');
+
+-- CreateEnum
+CREATE TYPE "TransactionTransferType" AS ENUM ('In', 'Out');
+
 -- CreateTable
 CREATE TABLE "BankAccount" (
     "id" SERIAL NOT NULL,
@@ -55,6 +61,7 @@ CREATE TABLE "TransactionExpense" (
     "amount" DOUBLE PRECISION NOT NULL,
     "installments" INTEGER DEFAULT 1,
     "ignoreTransaction" BOOLEAN NOT NULL DEFAULT false,
+    "variant" "TransactionTransferVariant" NOT NULL DEFAULT 'Regular',
     "date" TIMESTAMP(3) NOT NULL,
     "calculationDate" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -76,6 +83,7 @@ CREATE TABLE "TransactionRevenue" (
     "tags" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "amount" DOUBLE PRECISION NOT NULL,
     "ignoreTransaction" BOOLEAN NOT NULL DEFAULT false,
+    "variant" "TransactionTransferVariant" NOT NULL DEFAULT 'Regular',
     "date" TIMESTAMP(3) NOT NULL,
     "calculationDate" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -99,6 +107,19 @@ CREATE TABLE "TransactionSubCategory" (
 );
 
 -- CreateTable
+CREATE TABLE "TransactionTransfer" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "expenseId" INTEGER NOT NULL,
+    "revenueId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3),
+    "deletedAt" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "TransactionTransfer_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
@@ -109,6 +130,12 @@ CREATE TABLE "User" (
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "TransactionTransfer_expenseId_key" ON "TransactionTransfer"("expenseId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "TransactionTransfer_revenueId_key" ON "TransactionTransfer"("revenueId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
@@ -157,3 +184,12 @@ ALTER TABLE "TransactionSubCategory" ADD CONSTRAINT "TransactionSubCategory_user
 
 -- AddForeignKey
 ALTER TABLE "TransactionSubCategory" ADD CONSTRAINT "TransactionSubCategory_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "TransactionCategory"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TransactionTransfer" ADD CONSTRAINT "TransactionTransfer_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TransactionTransfer" ADD CONSTRAINT "TransactionTransfer_expenseId_fkey" FOREIGN KEY ("expenseId") REFERENCES "TransactionExpense"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TransactionTransfer" ADD CONSTRAINT "TransactionTransfer_revenueId_fkey" FOREIGN KEY ("revenueId") REFERENCES "TransactionRevenue"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

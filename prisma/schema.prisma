@@ -12,6 +12,17 @@ enum BankAccountType {
   Savings
 }
 
+enum TransactionTransferVariant {
+  Regular
+  Transfer
+  Archived
+}
+
+enum TransactionTransferType {
+  In
+  Out
+}
+
 model BankAccount {
   id        Int             @id @default(autoincrement())
   userId    Int
@@ -72,11 +83,13 @@ model TransactionExpense {
   amount      Float
   installments Int?      @default(1)
   ignoreTransaction Boolean @default(false)
+  variant     TransactionTransferVariant @default(Regular)
   date        DateTime
   calculationDate DateTime
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
   deletedAt   Boolean   @default(false)
+  TransactionTransfers    TransactionTransfer[]
 }
 
 model TransactionRevenue {
@@ -94,13 +107,14 @@ model TransactionRevenue {
   tags        String[] @default([])
   amount      Float
   ignoreTransaction Boolean @default(false)
+  variant     TransactionTransferVariant @default(Regular)
   date        DateTime
   calculationDate DateTime
   createdAt   DateTime  @default(now())
   updatedAt   DateTime? @updatedAt
   deletedAt   Boolean   @default(false)
+  TransactionTransfers    TransactionTransfer[]
 }
-
 
 model TransactionSubCategory {
   id        Int             @id @default(autoincrement())
@@ -116,6 +130,19 @@ model TransactionSubCategory {
   TransactionRevenues TransactionRevenue[]
 }
 
+model TransactionTransfer {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  expenseId Int @unique
+  expense TransactionExpense @relation(fields: [expenseId], references: [id])
+  revenueId Int @unique
+  revenue TransactionRevenue @relation(fields: [revenueId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  deletedAt   Boolean   @default(false)
+}
+
 model User {
   id           Int           @id @default(autoincrement())
   email        String        @unique
@@ -127,6 +154,7 @@ model User {
   CreditCards  CreditCard[]
   Expenses     TransactionExpense[]
   Revenues     TransactionRevenue[]
+  Transfers    TransactionTransfer[]
   TransactionCategories   TransactionCategory[]
   TransactionSubCategories TransactionSubCategory[]
 }

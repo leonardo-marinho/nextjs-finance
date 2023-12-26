@@ -1,4 +1,4 @@
-import TransactionExpenseController from '@/server/controllers/TransactionCategory.controller';
+import TransactionExpenseController from '@/server/controllers/TransactionExpense.controller';
 import ApiService from '@/server/services/Api.service';
 
 const handler = ApiService.handler({

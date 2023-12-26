@@ -1,10 +1,14 @@
-import { TransactionCategoryType, TransactionPaymentMethodType } from '@/lib/enums/Transaction';
+import { TransactionCategoryType } from '@/lib/enums/Transaction';
 import { IsDateString, IsEnum, IsInt, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class TransactionExpenseUpdateBody {
+export class TransactionRevenueUpdateBody {
   @IsOptional()
   @IsNumber()
   amount?: number;
+
+  @IsOptional()
+  @IsInt()
+  bankAccountId?: number;
 
   @IsOptional()
   @IsInt()
@@ -21,12 +25,4 @@ export class TransactionExpenseUpdateBody {
   @IsOptional()
   @IsString()
   description?: string;
-
-  @IsOptional()
-  @IsInt()
-  paymentMethodId?: number;
-
-  @IsOptional()
-  @IsEnum(TransactionPaymentMethodType)
-  paymentMethodType?: TransactionPaymentMethodType;
 }

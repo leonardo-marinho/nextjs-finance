@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsArray, IsDateString, IsOptional } from 'class-validator';
 
-export class TransactionExpenseFindManyFilters {
+export class TransactionRevenueFindManyFilters {
   @IsOptional()
   @IsArray()
   @Type(() => Number)

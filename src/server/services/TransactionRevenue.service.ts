@@ -1,37 +1,23 @@
 import prisma from '@/lib/database';
-import { TransactionCategoryType, TransactionPaymentMethodType } from '@/lib/enums/Transaction';
+import { TransactionCategoryType } from '@/lib/enums/Transaction';
 import { ApiBadRequestException } from '@/lib/exceptions/ApiBadRequest.exception';
-import { Prisma, TransactionExpense } from '@prisma/client';
+import { Prisma, TransactionRevenue } from '@prisma/client';
 
-import { TransactionExpenseCreateBody } from '../dtos/TransactionExpenseCreateBody.dto';
-import { TransactionExpenseFindManyFilters } from '../dtos/TransactionExpenseFindManyFilters.dto';
-import { TransactionExpenseUpdateBody } from '../dtos/TransactionExpenseUpdateBody.dto';
+import { TransactionRevenueCreateBody } from '../dtos/TransactionRevenueCreateBody.dto';
+import { TransactionRevenueFindManyFilters } from '../dtos/TransactionRevenueFindManyFilters.dto';
+import { TransactionRevenueUpdateBody } from '../dtos/TransactionRevenueUpdateBody.dto';
 
-class TransactionExpenseService {
-  async create(data: TransactionExpenseCreateBody, userId: number): Promise<TransactionExpense> {
-    const createData: Prisma.TransactionExpenseUncheckedCreateInput = {
+class TransactionRevenueService {
+  async create(data: TransactionRevenueCreateBody, userId: number): Promise<TransactionRevenue> {
+    const createData: Prisma.TransactionRevenueUncheckedCreateInput = {
       amount: data.amount,
-      bankAccountId: 0,
+      bankAccountId: data.bankAccountId,
       categoryId: 0,
-      creditCardId: null,
       date: data.date,
       description: data.description,
       subCategoryId: null,
       userId,
     };
-
-    if (data.paymentMethodType === TransactionPaymentMethodType.BANK_ACCOUNT) {
-      createData.bankAccountId = data.paymentMethodId;
-    } else if (data.paymentMethodType === TransactionPaymentMethodType.CREDIT_CARD) {
-      const creditCart = await prisma.creditCard.findUnique({
-        where: {
-          id: data.paymentMethodId,
-        },
-      });
-      if (!creditCart) throw new ApiBadRequestException('Credit card not found');
-      createData.creditCardId = data.paymentMethodId;
-      createData.bankAccountId = creditCart?.bankAccountId;
-    }
 
     if (data.categoryType === TransactionCategoryType.MAIN_CATEGORY) {
       createData.categoryId = data.categoryId;
@@ -46,15 +32,15 @@ class TransactionExpenseService {
       createData.subCategoryId = data.categoryId;
     } else throw new ApiBadRequestException('Invalid category type');
 
-    const transaction = await prisma.transactionExpense.create({
+    const transaction = await prisma.transactionRevenue.create({
       data: createData,
     });
 
     return transaction;
   }
 
-  async findMany(filters?: TransactionExpenseFindManyFilters): Promise<TransactionExpense[]> {
-    const whereDateArgs: Prisma.DateTimeFilter<'TransactionExpense'> = {};
+  async findMany(filters?: TransactionRevenueFindManyFilters): Promise<TransactionRevenue[]> {
+    const whereDateArgs: Prisma.DateTimeFilter<'TransactionRevenue'> = {};
 
     if ((filters?.startDate || filters?.endDate) && filters?.dates)
       throw new ApiBadRequestException('Passing dates and startDate/endDate is not allowed');
@@ -70,16 +56,13 @@ class TransactionExpenseService {
       whereDateArgs.lte = filters?.endDate;
     }
 
-    return await prisma.transactionExpense.findMany({
+    return await prisma.transactionRevenue.findMany({
       where: {
         bankAccountId: {
           in: filters?.bankAccountIds,
         },
         categoryId: {
           in: filters?.categoryIds,
-        },
-        creditCardId: {
-          in: filters?.creditCardIds,
         },
         date: whereDateArgs,
         id: {
@@ -95,33 +78,21 @@ class TransactionExpenseService {
     });
   }
 
-  async remove(id: number): Promise<TransactionExpense> {
-    return await prisma.transactionExpense.delete({
+  async remove(id: number): Promise<TransactionRevenue> {
+    return await prisma.transactionRevenue.delete({
       where: {
         id,
       },
     });
   }
 
-  async update(id: number, data: TransactionExpenseUpdateBody): Promise<TransactionExpense> {
-    const updateData: Prisma.TransactionExpenseUncheckedUpdateInput = {
+  async update(id: number, data: TransactionRevenueUpdateBody): Promise<TransactionRevenue> {
+    const updateData: Prisma.TransactionRevenueUncheckedUpdateInput = {
       amount: data?.amount,
+      bankAccountId: data?.bankAccountId,
       date: data?.date,
       description: data?.description,
     };
-
-    if (data.paymentMethodType === TransactionPaymentMethodType.BANK_ACCOUNT) {
-      updateData.bankAccountId = data.paymentMethodId;
-    } else if (data.paymentMethodType === TransactionPaymentMethodType.CREDIT_CARD) {
-      const creditCart = await prisma.creditCard.findUnique({
-        where: {
-          id: data.paymentMethodId,
-        },
-      });
-      if (!creditCart) throw new ApiBadRequestException('Credit card not found');
-      updateData.creditCardId = data.paymentMethodId;
-      updateData.bankAccountId = creditCart?.bankAccountId;
-    }
 
     if (data?.categoryType === TransactionCategoryType.MAIN_CATEGORY) {
       updateData.categoryId = data.categoryId;
@@ -136,7 +107,7 @@ class TransactionExpenseService {
       updateData.subCategoryId = data.categoryId;
     } else throw new ApiBadRequestException('Invalid category type');
 
-    return await prisma.transactionExpense.update({
+    return await prisma.transactionRevenue.update({
       data: updateData,
       where: {
         id,
@@ -145,4 +116,4 @@ class TransactionExpenseService {
   }
 }
 
-export default new TransactionExpenseService();
+export default new TransactionRevenueService();

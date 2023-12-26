@@ -24,6 +24,7 @@ model BankAccount {
   deletedAt Boolean         @default(false)
   CreditCards CreditCard[]
   TransactionExpenses TransactionExpense[]
+  TransactionRevenues TransactionRevenue[]
 }
 
 model CreditCard {
@@ -48,8 +49,9 @@ model TransactionCategory {
   createdAt DateTime        @default(now())
   updatedAt DateTime?       @updatedAt
   deletedAt Boolean         @default(false)
-  SubCategories TransactionSubCategory[]
   TransactionExpenses TransactionExpense[]
+  TransactionRevenues TransactionRevenue[]
+  SubCategories TransactionSubCategory[]
 }
 
 model TransactionExpense {
@@ -60,6 +62,24 @@ model TransactionExpense {
   bankAccount BankAccount @relation(fields: [bankAccountId], references: [id])
   creditCardId Int?
   creditCard  CreditCard? @relation(fields: [creditCardId], references: [id])
+  categoryId  Int
+  category    TransactionCategory? @relation(fields: [categoryId], references: [id])
+  subCategoryId Int?
+  subCategory TransactionSubCategory? @relation(fields: [subCategoryId], references: [id])
+  description String
+  amount      Float
+  date        DateTime
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  deletedAt   Boolean   @default(false)
+}
+
+model TransactionRevenue {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  bankAccountId Int
+  bankAccount BankAccount @relation(fields: [bankAccountId], references: [id])
   categoryId  Int
   category    TransactionCategory? @relation(fields: [categoryId], references: [id])
   subCategoryId Int?
@@ -84,6 +104,7 @@ model TransactionSubCategory {
   updatedAt DateTime?       @updatedAt
   deletedAt Boolean         @default(false)
   TransactionExpenses TransactionExpense[]
+  TransactionRevenues TransactionRevenue[]
 }
 
 model User {
@@ -96,6 +117,7 @@ model User {
   BankAccounts BankAccount[]
   CreditCards  CreditCard[]
   Expenses     TransactionExpense[]
+  Revenues     TransactionRevenue[]
   TransactionCategories   TransactionCategory[]
   TransactionSubCategories TransactionSubCategory[]
 }

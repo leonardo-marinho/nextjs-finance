@@ -16,7 +16,6 @@ class CreditCardController {
     @Body({ schema: CreditCardCreateBody }) body: CreditCardCreateBody,
     @UserId userId: number,
   ): Promise<boolean> {
-    console.log(1);
     await CreditCardService.create(body, userId);
     return true;
   }

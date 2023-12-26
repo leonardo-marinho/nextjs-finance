@@ -67,6 +67,8 @@ model TransactionExpense {
   subCategoryId Int?
   subCategory TransactionSubCategory? @relation(fields: [subCategoryId], references: [id])
   description String
+  observation String?
+  tags        String[] @default([])
   amount      Float
   installments Int?      @default(1)
   ignoreTransaction Boolean @default(false)
@@ -88,6 +90,8 @@ model TransactionRevenue {
   subCategoryId Int?
   subCategory TransactionSubCategory? @relation(fields: [subCategoryId], references: [id])
   description String
+  observation String?
+  tags        String[] @default([])
   amount      Float
   ignoreTransaction Boolean @default(false)
   date        DateTime

@@ -17,7 +17,9 @@ class TransactionRevenueService {
       date: data.date,
       description: data.description,
       ignoreTransaction: data.ignoreTransaction || false,
+      observation: data?.observation,
       subCategoryId: null,
+      tags: data?.tags,
       userId,
     };
 
@@ -87,6 +89,13 @@ class TransactionRevenueService {
         subCategoryId: {
           in: filters?.subCategoryIds,
         },
+        ...(filters?.tags?.length
+          ? {
+              tags: {
+                hasSome: filters?.tags,
+              },
+            }
+          : {}),
         userId: {
           in: filters?.userIds,
         },
@@ -110,6 +119,8 @@ class TransactionRevenueService {
       date: data?.date,
       description: data?.description,
       ignoreTransaction: data?.ignoreTransaction,
+      observation: data?.observation,
+      tags: data?.tags,
     };
 
     if (data?.categoryType === TransactionCategoryType.MAIN_CATEGORY) {

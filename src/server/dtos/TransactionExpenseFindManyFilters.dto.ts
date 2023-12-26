@@ -64,6 +64,11 @@ export class TransactionExpenseFindManyFilters {
 
   @IsOptional()
   @IsArray()
+  @Type(() => String)
+  tags?: string[];
+
+  @IsOptional()
+  @IsArray()
   @Type(() => Number)
   userIds: number[];
 }

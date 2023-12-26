@@ -19,7 +19,9 @@ class TransactionExpenseService {
       description: data.description,
       ignoreTransaction: data.ignoreTransaction || false,
       installments: data.installments || 1,
+      observation: data?.observation,
       subCategoryId: null,
+      tags: data?.tags,
       userId,
     };
 
@@ -105,6 +107,13 @@ class TransactionExpenseService {
         subCategoryId: {
           in: filters?.subCategoryIds,
         },
+        ...(filters?.tags?.length
+          ? {
+              tags: {
+                hasSome: filters?.tags,
+              },
+            }
+          : {}),
         userId: {
           in: filters?.userIds,
         },
@@ -128,6 +137,8 @@ class TransactionExpenseService {
       description: data?.description,
       ignoreTransaction: data?.ignoreTransaction,
       installments: data?.installments,
+      observation: data?.observation,
+      tags: data?.tags,
     };
 
     if (data.paymentMethodType === TransactionPaymentMethodType.BANK_ACCOUNT) {

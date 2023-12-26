@@ -1,5 +1,7 @@
 import { TransactionCategoryType } from '@/lib/enums/Transaction';
+import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsBooleanString,
   IsDateString,
   IsEnum,
@@ -41,4 +43,13 @@ export class TransactionRevenueUpdateBody {
   @IsOptional()
   @IsBooleanString()
   ignoreTransaction?: boolean;
+
+  @IsOptional()
+  @IsString()
+  observation?: string;
+
+  @IsOptional()
+  @IsArray()
+  @Type(() => String)
+  tags?: string[];
 }

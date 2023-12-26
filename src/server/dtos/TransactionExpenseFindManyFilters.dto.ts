@@ -6,40 +6,40 @@ export class TransactionExpenseFindManyFilters {
   @IsOptional()
   @IsArray()
   @Type(() => Number)
-  bankAccountIds: number[];
+  bankAccountIds?: number[];
 
   @IsOptional()
   @IsArray()
   @Type(() => Date)
-  calculationDates: Date[];
+  calculationDates?: Date[];
 
   @IsOptional()
   @IsArray()
   @Type(() => Number)
-  categoryIds: number[];
+  categoryIds?: number[];
 
   @IsOptional()
   @IsArray()
   @Type(() => Number)
-  creditCardIds: number[];
+  creditCardIds?: number[];
 
   @IsOptional()
   @IsArray()
   @Type(() => Date)
-  dates: Date[];
+  dates?: Date[];
 
   @IsOptional()
   @IsDateString()
-  endCalculationDate: Date;
+  endCalculationDate?: Date;
 
   @IsOptional()
   @IsDateString()
-  endDate: Date;
+  endDate?: Date;
 
   @IsOptional()
   @IsArray()
   @Type(() => Number)
-  ids: number[];
+  ids?: number[];
 
   @IsOptional()
   @IsBooleanString()
@@ -48,20 +48,20 @@ export class TransactionExpenseFindManyFilters {
   @IsOptional()
   @IsArray()
   @Type(() => Number)
-  installments: number[];
+  installments?: number[];
 
   @IsOptional()
   @IsDateString()
-  startCalculationDate: Date;
+  startCalculationDate?: Date;
 
   @IsOptional()
   @IsDateString()
-  startDate: Date;
+  startDate?: Date;
 
   @IsOptional()
   @IsArray()
   @Type(() => Number)
-  subCategoryIds: number[];
+  subCategoryIds?: number[];
 
   @IsOptional()
   @IsArray()
@@ -71,7 +71,7 @@ export class TransactionExpenseFindManyFilters {
   @IsOptional()
   @IsArray()
   @Type(() => Number)
-  userIds: number[];
+  userIds?: number[];
 
   @IsOptional()
   @IsArray()

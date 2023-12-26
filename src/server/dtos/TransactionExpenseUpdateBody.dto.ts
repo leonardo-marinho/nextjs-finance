@@ -1,5 +1,7 @@
 import { TransactionCategoryType, TransactionPaymentMethodType } from '@/lib/enums/Transaction';
+import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsBooleanString,
   IsDateString,
   IsEnum,
@@ -43,10 +45,19 @@ export class TransactionExpenseUpdateBody {
   installments?: number;
 
   @IsOptional()
+  @IsString()
+  observation?: string;
+
+  @IsOptional()
   @IsInt()
   paymentMethodId?: number;
 
   @IsOptional()
   @IsEnum(TransactionPaymentMethodType)
   paymentMethodType?: TransactionPaymentMethodType;
+
+  @IsOptional()
+  @IsArray()
+  @Type(() => String)
+  tags?: string[];
 }

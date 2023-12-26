@@ -59,6 +59,11 @@ export class TransactionRevenueFindManyFilters {
 
   @IsOptional()
   @IsArray()
+  @Type(() => String)
+  tags?: string[];
+
+  @IsOptional()
+  @IsArray()
   @Type(() => Number)
   userIds: number[];
 }

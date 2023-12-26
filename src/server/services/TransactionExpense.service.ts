@@ -157,9 +157,14 @@ class TransactionExpenseService {
       variant: data?.variant,
     };
 
-    if (data.paymentMethodType === TransactionPaymentMethodType.BANK_ACCOUNT) {
+    if (
+      (data?.paymentMethodType && !data?.paymentMethodId) ||
+      (!data?.paymentMethodType && data?.paymentMethodId)
+    )
+      throw new ApiBadRequestException('Passing paymentMethodType and paymentMethodId is required');
+    if (data?.paymentMethodType === TransactionPaymentMethodType.BANK_ACCOUNT) {
       updateData.bankAccountId = data.paymentMethodId;
-    } else if (data.paymentMethodType === TransactionPaymentMethodType.CREDIT_CARD) {
+    } else if (data?.paymentMethodType === TransactionPaymentMethodType.CREDIT_CARD) {
       const creditCart = await prisma.creditCard.findUnique({
         where: {
           id: data.paymentMethodId,
@@ -170,6 +175,8 @@ class TransactionExpenseService {
       updateData.bankAccountId = creditCart?.bankAccountId;
     }
 
+    if ((data?.categoryType && !data?.categoryId) || (!data?.categoryType && data?.categoryId))
+      throw new ApiBadRequestException('Passing categoryType and categoryId is required');
     if (data?.categoryType === TransactionCategoryType.MAIN_CATEGORY) {
       updateData.categoryId = data.categoryId;
     } else if (data?.categoryType === TransactionCategoryType.SUB_CATEGORY) {
@@ -181,7 +188,7 @@ class TransactionExpenseService {
       if (!subCategory) throw new ApiBadRequestException('Sub category not found');
       updateData.categoryId = subCategory.categoryId;
       updateData.subCategoryId = data.categoryId;
-    } else throw new ApiBadRequestException('Invalid category type');
+    }
 
     return await prisma.transactionExpense.update({
       data: updateData,

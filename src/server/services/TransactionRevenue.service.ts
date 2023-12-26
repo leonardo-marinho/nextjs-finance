@@ -139,6 +139,8 @@ class TransactionRevenueService {
       variant: data?.variant,
     };
 
+    if ((data?.categoryType && !data?.categoryId) || (!data?.categoryType && data?.categoryId))
+      throw new ApiBadRequestException('Passing categoryType and categoryId is required');
     if (data?.categoryType === TransactionCategoryType.MAIN_CATEGORY) {
       updateData.categoryId = data.categoryId;
     } else if (data?.categoryType === TransactionCategoryType.SUB_CATEGORY) {
@@ -150,8 +152,8 @@ class TransactionRevenueService {
       if (!subCategory) throw new ApiBadRequestException('Sub category not found');
       updateData.categoryId = subCategory.categoryId;
       updateData.subCategoryId = data.categoryId;
-    } else throw new ApiBadRequestException('Invalid category type');
-
+    }
+    console.log(1);
     return await prisma.transactionRevenue.update({
       data: updateData,
       where: {

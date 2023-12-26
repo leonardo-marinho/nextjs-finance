@@ -57,6 +57,10 @@ class TransactionTransferService {
 
   async findMany(filters?: TransactionTransferFindManyFilters): Promise<TransactionTransfer[]> {
     return await prisma.transactionTransfer.findMany({
+      include: {
+        expense: true,
+        revenue: true,
+      },
       where: {
         expenseId: filters?.expenseId,
         id: {
@@ -79,14 +83,21 @@ class TransactionTransferService {
 
     if (!transfer) throw new ApiBadRequestException('Transfer not found');
 
-    await TransactionExpenseService.remove(transfer.expenseId);
-    await TransactionRevenueService.remove(transfer.revenueId);
-
-    return await prisma.transactionTransfer.delete({
+    await TransactionExpenseService.update(transfer.expenseId, {
+      variant: TransactionTransferVariant.Archived,
+    });
+    await TransactionRevenueService.update(transfer.revenueId, {
+      variant: TransactionTransferVariant.Archived,
+    });
+    const deletedTransfer = await prisma.transactionTransfer.delete({
       where: {
         id,
       },
     });
+    await TransactionExpenseService.remove(transfer.expenseId);
+    await TransactionRevenueService.remove(transfer.revenueId);
+
+    return deletedTransfer;
   }
 
   async update(id: number, data: TransactionTransferUpdateBody): Promise<TransactionTransfer> {

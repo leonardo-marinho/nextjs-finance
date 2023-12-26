@@ -2,7 +2,7 @@
 CREATE TYPE "BankAccountType" AS ENUM ('Checking', 'Savings');
 
 -- CreateEnum
-CREATE TYPE "TransactionTransferVariant" AS ENUM ('Regular', 'Transfer');
+CREATE TYPE "TransactionTransferVariant" AS ENUM ('Regular', 'Transfer', 'Archived');
 
 -- CreateEnum
 CREATE TYPE "TransactionTransferType" AS ENUM ('In', 'Out');

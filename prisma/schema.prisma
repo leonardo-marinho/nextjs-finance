@@ -15,6 +15,7 @@ enum BankAccountType {
 enum TransactionTransferVariant {
   Regular
   Transfer
+  Archived
 }
 
 enum TransactionTransferType {

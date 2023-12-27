@@ -6,9 +6,9 @@ export interface SpinnerProps {
 
 export const Spinner: React.FC<SpinnerProps> = ({ size = 'medium' }): JSX.Element => {
   const resolvedSize = useMemo(() => {
-    if (size === 'small') return '12px';
-    if (size === 'medium') return '14px';
-    if (size === 'large') return '16px';
+    if (size === 'small') return '0.75rem';
+    if (size === 'medium') return '0.87rem';
+    if (size === 'large') return '1rem';
   }, [size]);
 
   return (

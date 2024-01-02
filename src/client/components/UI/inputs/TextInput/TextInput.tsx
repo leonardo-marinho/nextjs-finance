@@ -38,7 +38,7 @@ export const TextInput: React.FC<TextInputProps> = ({
             'block w-full bg-gray-100 p-2 text-left text-sm text-gray-800 shadow-sm focus:outline-none focus:ring-transparent',
             { 'pl-9': type === 'search' || type === undefined },
             { 'border-red-300 text-red-900 focus:border-red-500': invalid },
-            { 'bg-gray-100': disabled },
+            { 'text-gray-400': disabled },
           )}
           disabled={disabled}
           onChange={(event) => onChange?.(event.target.value)}
@@ -46,7 +46,7 @@ export const TextInput: React.FC<TextInputProps> = ({
           value={value}
         />
         {isLoading && (
-          <div className="absolute bottom-2.5 right-4">
+          <div className="pointer-events-none absolute inset-y-0 right-0.5 flex items-center px-2">
             <Spinner size={'large'} />
           </div>
         )}

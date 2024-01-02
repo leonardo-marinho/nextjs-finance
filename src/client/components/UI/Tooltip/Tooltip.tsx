@@ -1,9 +1,15 @@
+import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 export interface TooltipProps {
   label?: React.ReactNode;
+  showHelpCursor?: boolean;
 }
 
-export const Tooltip: React.FC<React.PropsWithChildren<TooltipProps>> = ({ children, label }) => {
+export const Tooltip: React.FC<React.PropsWithChildren<TooltipProps>> = ({
+  children,
+  label,
+  showHelpCursor = true,
+}) => {
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -36,7 +42,9 @@ export const Tooltip: React.FC<React.PropsWithChildren<TooltipProps>> = ({ child
 
   return (
     <div
-      className="relative cursor-help"
+      className={classNames('relative', {
+        'cursor-help': showHelpCursor,
+      })}
       onMouseOut={onMouseOutHandler}
       onMouseOver={onMouseOverHandler}
       ref={triggerRef}

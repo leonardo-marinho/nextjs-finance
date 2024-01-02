@@ -17,3 +17,19 @@ export const Default: Story = {
     label: 'Tooltip',
   },
 };
+
+export const WithHelpCursor: Story = {
+  args: {
+    children: 'Hover me',
+    label: 'Tooltip',
+    showHelpCursor: true,
+  },
+};
+
+export const WithoutHelpCursor: Story = {
+  args: {
+    children: 'Hover me',
+    label: 'Tooltip',
+    showHelpCursor: false,
+  },
+};

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { FieldError } from 'react-hook-form';
 
-export interface InputProps {
+export interface InputWrapperProps {
   error?: FieldError;
   label: string;
   maxLength?: number;
@@ -9,7 +9,7 @@ export interface InputProps {
   valueLength?: number;
 }
 
-export const Input: React.FC<React.PropsWithChildren<InputProps>> = ({
+export const InputWrapper: React.FC<React.PropsWithChildren<InputWrapperProps>> = ({
   children,
   error,
   label,

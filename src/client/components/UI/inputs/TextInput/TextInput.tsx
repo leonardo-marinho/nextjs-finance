@@ -2,10 +2,12 @@ import classNames from 'classnames';
 import { HTMLProps } from 'react';
 import { Search } from 'react-feather';
 
-import { Input, InputProps } from '../Input/Input';
-import { Spinner } from '../Spinner/Spinner';
+import { Spinner } from '../../Spinner/Spinner';
+import { InputWrapper, InputWrapperProps } from '../InputWrapper/InputWrapper';
 
-export interface TextInputProps extends InputProps, Pick<HTMLProps<HTMLInputElement>, 'type'> {
+export interface TextInputProps
+  extends InputWrapperProps,
+    Pick<HTMLProps<HTMLInputElement>, 'type'> {
   disabled?: boolean;
   invalid?: boolean;
   isLoading?: boolean;
@@ -23,7 +25,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   ...inputProps
 }): JSX.Element => {
   return (
-    <Input {...inputProps}>
+    <InputWrapper {...inputProps}>
       <div className="relative w-full focus-within:outline-none">
         {(type === 'search' || type === undefined) && (
           <div className="pointer-events-none absolute inset-y-0 flex items-center px-2">
@@ -49,6 +51,6 @@ export const TextInput: React.FC<TextInputProps> = ({
           </div>
         )}
       </div>
-    </Input>
+    </InputWrapper>
   );
 };

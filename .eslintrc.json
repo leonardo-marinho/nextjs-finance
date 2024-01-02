@@ -4,8 +4,8 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
-    "plugin:storybook/recommended",
-    "plugin:eslint-plugin-perfectionist/recommended-alphabetical"
+    "plugin:eslint-plugin-perfectionist/recommended-alphabetical",
+    "plugin:storybook/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint", "perfectionist"],

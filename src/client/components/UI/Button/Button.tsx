@@ -66,11 +66,11 @@ export const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
 
   const iconSize = useMemo(() => {
     if (size === 'small') {
-      return '1rem';
+      return '16px';
     } else if (size === 'medium') {
-      return '1.125rem';
+      return '18px';
     } else {
-      return '1.25rem';
+      return '20px';
     }
   }, [size]);
 

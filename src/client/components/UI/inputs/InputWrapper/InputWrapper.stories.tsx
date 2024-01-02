@@ -5,7 +5,7 @@ import { InputWrapper } from './InputWrapper';
 const meta: Meta<typeof InputWrapper> = {
   component: InputWrapper,
   tags: ['autodocs'],
-  title: 'Components/UI/InputWrappers/InputWrapper',
+  title: 'Components/UI/Inputs/InputWrapper',
 };
 
 export default meta;

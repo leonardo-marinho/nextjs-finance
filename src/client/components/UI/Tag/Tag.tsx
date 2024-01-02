@@ -5,7 +5,7 @@ import { Icon } from 'react-feather';
 export interface TagProps {
   color?: 'error' | 'secondary' | 'success';
   icon?: Icon;
-  label?: React.ReactNode;
+  label?: string;
   size?: 'large' | 'medium' | 'small';
 }
 

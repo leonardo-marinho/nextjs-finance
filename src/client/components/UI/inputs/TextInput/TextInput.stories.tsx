@@ -38,3 +38,21 @@ export const Date: Story = {
     type: 'date',
   },
 };
+
+export const Loading: Story = {
+  args: {
+    isLoading: true,
+    label: 'Loading',
+    type: 'text',
+    value: 'Loading',
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+    label: 'Disabled',
+    type: 'text',
+    value: 'Disabled',
+  },
+};

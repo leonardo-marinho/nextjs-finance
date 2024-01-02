@@ -18,7 +18,7 @@ export const InputWrapper: React.FC<React.PropsWithChildren<InputWrapperProps>> 
   valueLength,
 }): JSX.Element => {
   return (
-    <div>
+    <div className="flex flex-col">
       <label className="field-label mt-1 flex-1 justify-self-end text-base text-gray-500">
         {label} {required && '*'}
       </label>

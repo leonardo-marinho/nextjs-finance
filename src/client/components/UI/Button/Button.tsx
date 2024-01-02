@@ -124,8 +124,8 @@ export const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
       )}
     >
       <div
-        className={classNames('flex items-center justify-center gap-0.5', {
-          ['gap-1']: size === 'large',
+        className={classNames('flex items-center justify-center gap-1.5', {
+          ['gap-2']: size === 'large',
         })}
       >
         {isLoading && <Spinner light={isSpinnerLight} size={size} />}

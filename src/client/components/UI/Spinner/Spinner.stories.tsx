@@ -28,3 +28,16 @@ export const Small: Story = {
     size: 'small',
   },
 };
+
+export const Light: Story = {
+  args: {
+    light: true,
+  },
+  render: (args) => {
+    return (
+      <div className="bg-black bg-opacity-50 px-4 py-4">
+        <Spinner {...args} />
+      </div>
+    );
+  },
+};

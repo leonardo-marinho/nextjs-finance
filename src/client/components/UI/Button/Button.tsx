@@ -10,7 +10,7 @@ export interface ButtonProps {
   icon?: Icon;
   isDisabled?: boolean;
   isLoading?: boolean;
-  label?: string;
+  label?: React.ReactNode;
   onClick?: () => void;
   size?: 'large' | 'medium' | 'small';
   variant?: 'filled' | 'outlined' | 'text';
@@ -90,6 +90,14 @@ export const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
     }
   }, [size]);
 
+  const isSpinnerLight = useMemo(() => {
+    if (color === 'primary' && variant === 'filled') {
+      return true;
+    } else {
+      return false;
+    }
+  }, [color, variant]);
+
   const variantClassNames = useMemo(() => {
     if (variant === 'filled') {
       return 'text-white';
@@ -116,11 +124,11 @@ export const Button: React.FC<React.PropsWithChildren<ButtonProps>> = ({
       )}
     >
       <div
-        className={classNames('flex items-center justify-center gap-1', {
-          ['gap-2']: size === 'large',
+        className={classNames('flex items-center justify-center gap-0.5', {
+          ['gap-1']: size === 'large',
         })}
       >
-        {isLoading && <Spinner size={size} />}
+        {isLoading && <Spinner light={isSpinnerLight} size={size} />}
         {!!icon && !isLoading && <IconElement size={iconSize} />}
         {children || (label && <span>{children || label}</span>)}
       </div>
